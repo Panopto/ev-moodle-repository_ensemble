@@ -27,12 +27,12 @@
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once(dirname(dirname(__FILE__)) . '/lib.php');
 
-$defaultthumb = new moodle_url('repository/ensemble/ext_chooser/css/images/playlist.png');
+$repoid         = required_param('repo_id', PARAM_INT);
+$contextid      = required_param('context_id', PARAM_INT);
 
-$content   = required_param('content', PARAM_RAW);
-$title     = required_param('title', PARAM_TEXT);
-$repoid    = required_param('repo_id', PARAM_INT);
-$contextid = required_param('context_id', PARAM_INT);
+$content        = optional_param('content', '', PARAM_RAW);
+$title          = optional_param('title', '', PARAM_TEXT);
+$lti_errormsg   = optional_param('lti_errormsg', '', PARAM_TEXT);
 
 $repo = repository::get_instance($repoid);
 if (!$repo) {
@@ -51,17 +51,19 @@ $PAGE->set_context($context);
 
 echo $OUTPUT->header();
 
-$sourceurl = new moodle_url($repo->get_option('ensembleURL'), array(
-    'content' => urlencode($content)
-));
-$source = $sourceurl->out(true);
-$sourcekey = sha1($source . $repo::get_secret_key() . sesskey());
+if ($lti_errormsg != '') {
+    echo $OUTPUT->notification($lti_errormsg);
+} else {
+    $sourceurl = new moodle_url($repo->get_option('ensembleURL'), array(
+        'content' => urlencode($content)
+    ));
+    $source = $sourceurl->out(true);
+    $sourcekey = sha1($source . $repo::get_secret_key() . sesskey());
 
-$escapedtitle = str_replace("'", "\'", $title);
+    $escapedtitle = str_replace("'", "\'", $title);
 
-$js = <<<EOD
+    $js = <<<EOD
 var filepicker = window.parent.M.core_filepicker.active_filepicker;
-
 filepicker.select_file({
     title: '{$escapedtitle}.mp4',
     source: '{$source}',
@@ -70,6 +72,7 @@ filepicker.select_file({
 });
 EOD;
 
-$PAGE->requires->js_amd_inline($js);
+    $PAGE->requires->js_amd_inline($js);
+}
 
 echo $OUTPUT->footer();

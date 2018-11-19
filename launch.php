@@ -52,7 +52,12 @@ $PAGE->set_context($context);
 
 echo $OUTPUT->header();
 
-$launchurl = $repo->get_option('ensembleURL') . '/app/lti/launch.ashx';
+$evurl = $repo->get_option('ensembleURL');
+// Trim whitespace and trailing slash
+$evurl = trim($evurl);
+$evurl = rtrim($evurl, '/');
+
+$launchurl = $evurl . '/app/lti/launch.ashx';
 $consumerkey = $repo->get_option('consumerKey');
 $sharedsecret = $repo->get_option('sharedSecret');
 $additionalparams = $repo->get_option('additionalParams');
