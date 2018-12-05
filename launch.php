@@ -103,7 +103,7 @@ $apiurl = $request->get_normalized_http_url();
 
 $newparms = $request->get_parameters();
 
-$output = "<form action=\"" . $apiurl . "\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\"" .
+$output = "<span id=\"user-notifications\"></span><form action=\"" . $apiurl . "\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\"" .
     " method=\"post\" encType=\"application/x-www-form-urlencoded\">\n";
 // Contruct html for the launch parameters.
 foreach ($newparms as $key => $value) {
