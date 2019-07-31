@@ -94,7 +94,7 @@ foreach ($params as $param) {
     }
     $parts[0] = trim($parts[0]);
     $parts[1] = trim($parts[1]);
-    $request->set_parameter($parts[0], $parts[1]);
+    $request->set_parameter($parts[0], $parts[1], false);
 }
 
 $request->sign_request(new lti\OAuthSignatureMethod_HMAC_SHA1(), $consumer, false);
